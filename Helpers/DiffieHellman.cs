@@ -11,20 +11,18 @@ namespace TicketingAPI.Helpers
         public byte[] SenderPublicKey { get; set; }
         public byte[] ReceiverPublicKey { get; set; }
         public byte[] EncryptedMessage { get; set; }
-        public byte[] IV { get; set; }
 
         public string Init()
         {
-            using (ECDiffieHellmanCng receiver = new ECDiffieHellmanCng())
+            using (ECDiffieHellmanCng receiver = new ECDiffieHellmanCng(521))
             {
-
                 receiver.KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hash;
                 receiver.HashAlgorithm = CngAlgorithm.Sha256;
 
                 // Get public key of receiver
                 ReceiverPublicKey = receiver.PublicKey.ToByteArray();
 
-                using (ECDiffieHellmanCng sender = new ECDiffieHellmanCng())
+                using (ECDiffieHellmanCng sender = new ECDiffieHellmanCng(521))
                 {
                     sender.KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hash;
                     sender.HashAlgorithm = CngAlgorithm.Sha256;
@@ -50,7 +48,11 @@ namespace TicketingAPI.Helpers
 
             using (Aes aes = new AesCryptoServiceProvider())
             {
+                aes.KeySize = 256;
+                aes.BlockSize = 128;
                 aes.Key = key;
+
+                aes.GenerateIV();
                 iv = aes.IV;
 
                 // Encrypt the message
@@ -73,6 +75,8 @@ namespace TicketingAPI.Helpers
             string message;
             using (Aes aes = new AesCryptoServiceProvider())
             {
+                aes.KeySize = 256;
+                aes.BlockSize = 128;
                 aes.Key = key;
                 aes.IV = iv;
 
