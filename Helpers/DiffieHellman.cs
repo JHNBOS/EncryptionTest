@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -33,12 +34,16 @@ namespace TicketingAPI.Helpers
                     var senderKey = sender.DeriveKeyMaterial(CngKey.Import(ReceiverPublicKey, CngKeyBlobFormat.EccPublicBlob));
                     var receiverKey = receiver.DeriveKeyMaterial(CngKey.Import(SenderPublicKey, CngKeyBlobFormat.EccPublicBlob));
 
-                    var cipher = Encrypt(senderKey, @"{transaction:38547494,seat:271,timestamp:1577788104}");
-                    var plainText = Decrypt(cipher.Item1, cipher.Item2, receiverKey);
+                    if(senderKey.SequenceEqual(receiverKey))
+                    {
+                        var cipher = Encrypt(senderKey, @"{transaction:38547494,seat:271,timestamp:1577788104}");
+                        var plainText = Decrypt(cipher.Item1, cipher.Item2, receiverKey);
 
-                    return Convert.ToBase64String(cipher.Item1);
+                        return Convert.ToBase64String(cipher.Item1);
+                    }                    
                 }
             }
+            return String.Empty;
         }
 
         private Tuple<byte[], byte[]> Encrypt(byte[] key, string message)
@@ -94,5 +99,9 @@ namespace TicketingAPI.Helpers
             return message;
         }
 
+        //public Tuple<byte[], byte[]> GenerateKeyPair()
+        //{
+
+        //}
     }
 }

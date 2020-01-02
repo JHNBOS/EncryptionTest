@@ -160,12 +160,14 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\RegistrationController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
-    <Compile Include="EncryptionUtils.cs" />
+    <Compile Include="Helpers\ECC.cs" />
+    <Compile Include="Helpers\EncryptionUtils.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AES.cs" />
     <Compile Include="Helpers\DiffieHellman.cs" />
-    <Compile Include="Helpers\KeyCoordinates.cs" />
+    <Compile Include="Helpers\RSA.cs" />
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
